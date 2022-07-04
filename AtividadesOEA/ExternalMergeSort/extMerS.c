@@ -14,7 +14,7 @@ struct _Endereco
 	char uf[72];
 	char sigla[2];
 	char cep[8];
-	char lixo[2]; // Ao EspaÃ§o no final da linha + quebra de linha
+	char lixo[2]; // Ao Espaço no final da linha + quebra de linha
 };
 
 int compara(const void *e1, const void *e2)
@@ -25,7 +25,7 @@ int compara(const void *e1, const void *e2)
 int main(int argc, char **argv)
 {
 	FILE *a, *b, *saida1, *saida2, *saida3, *saida4, *fim;
-	Endereco ea, eb, ec, ed;
+	Endereco e0, e1, e2, e3, e4, e5;
 	int proxnome = 4, proxint = 0;
 	long tam, qtd, qtdmemb, q0, q1, qq, q2, q3;
 	char nomearq[10], nomearq2[10], proxNome[10];
@@ -43,65 +43,67 @@ int main(int argc, char **argv)
 
     rewind(a);
 
-	fread(&ea, sizeof(Endereco), q0, a);
-	qsort(&ea, q0, sizeof(Endereco), compara);
+	fread(&e0, sizeof(Endereco), q0, a);
+	qsort(&e0, q0, sizeof(Endereco), compara);
     saida1 = fopen("arq0.dat", "wb");
-	fwrite(&ea ,sizeof(Endereco), q0, saida1);
-     
-	fread(&eb, sizeof(Endereco), q1, a);
-	qsort(&eb, q1, sizeof(Endereco), compara);
+	fwrite(&e0 ,sizeof(Endereco), q0, saida1);
+	    
+	fread(&e1, sizeof(Endereco), q1, a);
+	qsort(&e1, q1, sizeof(Endereco), compara);
     saida2 = fopen("arq1.dat", "wb");
-	fwrite(&eb ,sizeof(Endereco), q1, saida2);
-
-    fread(&ec, sizeof(Endereco), q2, a); 
-	qsort(&ec, q2, sizeof(Endereco), compara);
-    saida3 = fopen("arq2.dat", "wb");
-	fwrite(&ec ,sizeof(Endereco), q2, saida3);
+	fwrite(&e1 ,sizeof(Endereco), q1, saida2);
     
-	fread(&ed, sizeof(Endereco), q3, a);
-	qsort(&ed, q3, sizeof(Endereco), compara);
+    fread(&e2, sizeof(Endereco), q2, a); 
+	qsort(&e2, q2, sizeof(Endereco), compara);
+    saida3 = fopen("arq2.dat", "wb");
+	fwrite(&e2 ,sizeof(Endereco), q2, saida3);
+    
+	fread(&e3, sizeof(Endereco), q3, a);
+	qsort(&e3, q3, sizeof(Endereco), compara);
     saida4 = fopen("arq3.dat", "wb");
-	fwrite(&ed ,sizeof(Endereco), q3, saida4);
+	fwrite(&e3 ,sizeof(Endereco), q3, saida4);
 
 	fclose(a);
-
-	//sprintf('nomearq', 'arq%d.dat', i);
 	
 	while (proxnome - proxint > 1)
 	{   
-		sprintf('nomearq', 'arq%d.dat', proxint);
-		sprintf('nomearq2', 'arq%d.dat', (proxint+1));
-		sprintf('proxNome', 'arq%d.dat', proxnome);
-        a = fopen("nomearq", "rb");
+		sprintf("nomearq", "arq%d.dat", proxint);
+		sprintf("nomearq2", "arq%d.dat", (proxint+1));
+		sprintf("proxNome", "arq%d.dat", proxnome);
+        
+		a = fopen("nomearq", "rb");
         b = fopen("nomearq2", "rb"); 
 		fim = fopen("proxNome", "wb");
+
+		fread(&e4, sizeof(Endereco), 1, a);
+		fread(&e5, sizeof(Endereco), 1, b);
         
 		while (!feof(a) && !feof(fim))
 		{
-			if (compara(&ea, &eb) < 0)
+			if (compara(&e4, &e5) < 0)
 			{
-				fwrite(&ea, sizeof(Endereco), 1, fim);
-				fread(&ea, sizeof(Endereco), 1, a);
+				fwrite(&e4, sizeof(Endereco), 1, fim);
+				fread(&e5, sizeof(Endereco), 1, a);
 			}
 			else
 			{
-				fwrite(&eb, sizeof(Endereco), 1, fim);
-				fread(&eb, sizeof(Endereco), 1, b);
+				fwrite(&e5, sizeof(Endereco), 1, fim);
+				fread(&e5, sizeof(Endereco), 1, b);
 			}
 		}
 
 		while (!feof(a))
 		{
-			fwrite(&ea, sizeof(Endereco), 1, fim);
-			fread(&ea, sizeof(Endereco), 1, a);
+			fwrite(&e4, sizeof(Endereco), 1, fim);
+			fread(&e4, sizeof(Endereco), 1, a);
 		}
-		while (!feof(fim))
+		while (!feof(b))
 		{
-			fwrite(&eb, sizeof(Endereco), 1, fim);
-			fread(&eb, sizeof(Endereco), 1, b);
+			fwrite(&e5, sizeof(Endereco), 1, fim);
+			fread(&e5, sizeof(Endereco), 1, b);
 		}
-		remove(a);
-		remove(b);
+		remove(nomearq);
+		remove(nomearq2);
 
 		proxint+=2;
 		proxnome++;
