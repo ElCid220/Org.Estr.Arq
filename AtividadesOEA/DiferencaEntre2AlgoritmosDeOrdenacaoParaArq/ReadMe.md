@@ -1,3 +1,6 @@
-No código ordena1.c, lemos uma lista de endereços, comparamos o primeiro cep com os outros para vermos se há outro menor, caso tenha, esse outro vai para a frente e é comparado com os demais endereços para ver se encontra outro menor. Quando encontrarmos o endereço com menor cep para ocupar a 1° posição, pulamos para a 2° posição e voltamos a comparar o cep da 2° posição de endereços com os demais ceps à direita e assim por diante até ordenarmos a lista. Após ordenação em ordem crscente, um novo arquivo é aberto para a ordenação ser imprimida nele.
+No código ordena1.c, lemos uma lista de endereços, salvamo-os em um buffer e ordenamos esse buffer. Após ordenação em ordem crscente, um novo arquivo é aberto para a ordenação ser escrita nele.
+&nbsp;
+No código ordena2.c, vamos dividir a lista de endereços em duas metades. Depois, vamos ordenar a 1° metade, usando a comparação entre cep, em seguida escreveremos a ordenação em um arquivo. Agora ordenamos segunda metade usando a comparação por meio de cep, e concluímos escrevendo a ordenação em outro arquivo. 
+&nbsp;
 
-No código ordena2.c, vamos dividir a lista de endereços em duas metades. Depois, vamos ordenar a 1° metade e, em seguida, a segunda metade usando a comparação por meio de cep. Após isso, iremos comparar apenas a 1° metade em meio a lista inteira de endereços. Por fim, concluída a ordenação, será gerado um arquivo com a lista de endereços ordenada em ordem crescente. 
+Observação: usamos a função qsort() para efetuar a ordenação.
