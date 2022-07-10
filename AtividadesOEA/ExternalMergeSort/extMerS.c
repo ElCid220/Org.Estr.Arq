@@ -22,63 +22,74 @@ int compara(const void *e1, const void *e2)
 	return strncmp(((Endereco*)e1)->cep,((Endereco*)e2)->cep,8);
 }
 
-int main(int argc, char **argv)
-{
-	FILE *a, *b, *saida1, *saida2, *saida3, *saida4, *fim;
+int main(int argc, char**argv)
+{   
+	printf("abelha rainha");
+    FILE *a = NULL, *b, *saida1 = NULL, *saida2, *saida3, *saida4, *fim;
 	Endereco e0, e1, e2, e3, e4, e5;
 	int proxnome = 4, proxint = 0;
-	long tam, qtd, qtdmemb, q0, q1, qq, q2, q3;
-	char nomearq[10], nomearq2[10], proxNome[10];
+	long posicao, metade, qtd, metade1, metade2, metade3, metade4;
+	char nomearq[10], nomearq2[10], proxNome[10], entrada[10] = "cep-AC.dat";
+	
 
-	a = fopen("cep-AC.dat", "rb");
-    fseek(a, 0, SEEK_END);
-	tam = ftell(a);
-	qtd = tam/4;
-	qtdmemb = qtd / sizeof(Endereco) ;
-	q0 = qtd;
-	q1 = (tam / 2) - q0 ;
-	qq = tam - (tam /2);
-	q2 = qq /2 ;
-	q3 = qq - q2 ;
+	a = fopen(entrada, "rb");
+	
+	fseek(a, 0, SEEK_END);
+	posicao = ftell(a);
+	qtd = posicao / sizeof(Endereco); // qtd de enderecos
+	metade = qtd/2;
+	metade1 = metade/2; //1° quarto
+    metade2 = metade - metade1; //2° quarto
+	metade3 = (qtd - metade)/2; //3° quarto
+	metade4 = qtd - metade3; //4° quarto
 
     rewind(a);
-
-	fread(&e0, sizeof(Endereco), q0, a);
-	qsort(&e0, q0, sizeof(Endereco), compara);
+     
+	fread(&e0, sizeof(Endereco), metade1, a); 
+	qsort(&e0, metade1, sizeof(Endereco), compara); 
     saida1 = fopen("arq0.dat", "wb");
-	fwrite(&e0 ,sizeof(Endereco), q0, saida1);
-	    
-	fread(&e1, sizeof(Endereco), q1, a);
-	qsort(&e1, q1, sizeof(Endereco), compara);
+	fwrite(&e0 , sizeof(Endereco), metade1, saida1);
+	rewind(saida1);
+	fclose(saida1);
+	   
+	fread(&e1, sizeof(Endereco), metade2, a);
+	qsort(&e1, metade2, sizeof(Endereco), compara);
     saida2 = fopen("arq1.dat", "wb");
-	fwrite(&e1 ,sizeof(Endereco), q1, saida2);
+	fwrite(&e1 ,sizeof(Endereco), metade2, saida2);
+	rewind(saida2);
+	fclose(saida2);
     
-    fread(&e2, sizeof(Endereco), q2, a); 
-	qsort(&e2, q2, sizeof(Endereco), compara);
+    fread(&e2, sizeof(Endereco), metade3, a); 
+	qsort(&e2, metade3, sizeof(Endereco), compara);
     saida3 = fopen("arq2.dat", "wb");
-	fwrite(&e2 ,sizeof(Endereco), q2, saida3);
+	fwrite(&e2 ,sizeof(Endereco), metade3, saida3);
+	rewind(saida3);
+	fclose(saida3);
     
-	fread(&e3, sizeof(Endereco), q3, a);
-	qsort(&e3, q3, sizeof(Endereco), compara);
+	fread(&e3, sizeof(Endereco), metade4, a);
+	qsort(&e3, metade4, sizeof(Endereco), compara);
     saida4 = fopen("arq3.dat", "wb");
-	fwrite(&e3 ,sizeof(Endereco), q3, saida4);
-
-	fclose(a);
+	fwrite(&e3 ,sizeof(Endereco), metade4, saida4);
+	rewind(saida4);
+	fclose(saida4);
+    
+	remove(entrada);
+	fclose(a); 
 	
-	while (proxnome - proxint > 1)
+     while (proxnome - proxint > 1)
 	{   
-		sprintf("nomearq", "arq%d.dat", proxint);
-		sprintf("nomearq2", "arq%d.dat", (proxint+1));
-		sprintf("proxNome", "arq%d.dat", proxnome);
+		sprintf(nomearq, "arq%d.dat", proxint);
+		sprintf(nomearq2, "arq%d.dat", (proxint++));
+		sprintf(proxNome, "arq%d.dat", proxnome);
         
-		a = fopen("nomearq", "rb");
-        b = fopen("nomearq2", "rb"); 
-		fim = fopen("proxNome", "wb");
+		a = fopen(nomearq, "rb");
+        b = fopen(nomearq2, "rb"); 
+		fim = fopen(proxNome, "wb");
 
 		fread(&e4, sizeof(Endereco), 1, a);
 		fread(&e5, sizeof(Endereco), 1, b);
         
-		while (!feof(a) && !feof(fim))
+		while (!feof(a) && !feof(b))
 		{
 			if (compara(&e4, &e5) < 0)
 			{
@@ -102,12 +113,18 @@ int main(int argc, char **argv)
 			fwrite(&e5, sizeof(Endereco), 1, fim);
 			fread(&e5, sizeof(Endereco), 1, b);
 		}
+		
 		remove(nomearq);
 		remove(nomearq2);
+		rewind(fim);
+
+		fclose(a);
+		fclose(b);
+		fclose(fim);
 
 		proxint+=2;
 		proxnome++;
 	}
 
-	fclose(fim);
+	fclose(fim); 
 }
