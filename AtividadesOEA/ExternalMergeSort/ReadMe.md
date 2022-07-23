@@ -6,4 +6,4 @@ gcc -o extMerS extMerS.c
 
 ./extMerS
 
-Obs: quem usar SO Windows deverá instalar o Cygwin64, MSYS2 ou MinGW-w64 para dar os comandos.
+Obs: quem usar SO Windows deverá instalar o Cygwin64, MSYS2 ou MinGW-w64 para dar os comandoss e, deverá colocar o código-fonte junto com os demais arquivos a serem usados para compilar o programa dentro do diretório da instalação a ser usada..
